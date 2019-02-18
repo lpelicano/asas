@@ -1,0 +1,15 @@
+{% extends "components/base.html" %}
+
+{% block content %}
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit">Submit</button>
+</form>
+
+{% for u in urls %}
+	<p>{{ u }}</p>
+{% endfor %}
+
+{% endblock %}
