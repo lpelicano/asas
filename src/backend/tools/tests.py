@@ -1,10 +1,11 @@
 from django.test import TestCase
 
-from tools.methods import URIToSplit
+from tools.methods import URIToSplitKev
 
 
 class URLToSplitTestCase(TestCase):
 	def setUp(self):
+		# url list input - post data
 		self.uri_list = [
 			"https://www.rebootonline.com/asdsadsd",
 			"https://rebootonline.com/asdsadsd",
@@ -14,18 +15,21 @@ class URLToSplitTestCase(TestCase):
 			"https://wew.easpsd.rebootonline.com/sdsdsd",
 			"wew.easpsd.rebootonline.com/sdsdsd"
 		]
+
+		# what the list should be if subdomain == True
+		# www needs to be striped
 		self.uri_subdomain_list = [
-			"www.rebootonline.com",
 			"rebootonline.com",
 			"rebootonline.com",
-			"www.rebootonline.com",
+			"rebootonline.com",
+			"rebootonline.com",
 			"aspsd.rebootonline.com",
-			"rebootonline.com",
 			"wew.easpsd.rebootonline.com",
 			"wew.easpsd.rebootonline.com"
 		]
+
+		# what the list should be if subdomain == False
 		self.uri_no_subdomain_list = [
-			"rebootonline.com",
 			"rebootonline.com",
 			"rebootonline.com",
 			"rebootonline.com",
@@ -36,17 +40,14 @@ class URLToSplitTestCase(TestCase):
 		]
 
 	def test_return_domain_and_suffix(self):
-		self.assertEqual(URIToSplit(self.uri_list[0]).domain, "rebootonline.com")
-		self.assertEqual(URIToSplit(self.uri_list[1]).domain, "rebootonline.com")
-		self.assertEqual(URIToSplit(self.uri_list[2]).domain, "rebootonline.com")
-		self.assertEqual(URIToSplit(self.uri_list[3]).domain, "rebootonline.com")
-		self.assertEqual(URIToSplit(self.uri_list[4]).domain, "rebootonline.com")
-		self.assertEqual(URIToSplit(self.uri_list[5]).domain, "rebootonline.com")
-		self.assertEqual(URIToSplit(self.uri_list[6]).domain, "rebootonline.com")
+		split_urls = URIToSplitKev(self.uri_list, False)  
+		self.assertEqual(split_urls.new_list, self.uri_no_subdomain_list)
 
-	def test_return_sub_domain_domain_and_suffix(self):
-		self.assertEqual(URIToSplit(self.uri_list).new_uri, self.uri_no_subdomain_list)
-		# self.assertEqual(self.rebootonline_uri_list, self.uri_subdomain_list)
+	def test_return_subdomain_doamin_and_suffix(self):
+		split_urls = URIToSplitKev(self.uri_list, True)
+		self.assertEqual(split_urls.new_list, self.uri_subdomain_list) 
+
+
 
 
 
